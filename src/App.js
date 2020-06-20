@@ -1,12 +1,14 @@
 import React from 'react';
-import Counter from './Counter';
-import Say from './Say';
+
+import EventPractice from './EventPractice';
+import EventPracticeF from './EventPracticeF';
+import ValidationSample from './ValidationSample';
+// import EventPracticeFList from './EventPracticeFList';
 
 const App = () => {
   return (
     <div>
-      <Say/>
-      <Counter/>
+      <ValidationSample/>
     </div>
   );
 };
