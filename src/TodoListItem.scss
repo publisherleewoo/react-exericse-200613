@@ -1,15 +1,16 @@
-// .TodoListItem-virtualized {
-//     & + & {
-//         border-top: 1px solid #dee2e6;
-//     }
-//     &:nth-child(even) {
-//         // 격줄로 list에 색 넣기(가독성 상승)
-//         background: #f8f9fa;
-//     }
-// }
+.TodoListItem-virtualized {
+    & + & {
+        border-top: 1px solid #dee2e6;
+    }
+    &:nth-child(even) {
+        // 격줄로 list에 색 넣기(가독성 상승)
+        background: #f8f9fa;
+    }
+}
 
 .TodoListItem {
     padding: 1rem;
+    box-sizing: border-box;
     display: flex; // flex 기능을 쓰겠다 이런건가...?
     align-items: center; // 세로 중앙 정렬
     &:nth-child(even) {

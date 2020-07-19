@@ -1,36 +1,45 @@
-import React, { useState, useCallback, useRef } from "react";
-
-// import EventPractice from './EventPractice';
-// import EventPracticeF from './EventPracticeF';
-// import ValidationSample from './ValidationSample';
-// import EventPracticeFList from './EventPracticeFList';
-// import Info from "./Info";
-// import CounterReducer from "./CounterReducer";
-// import Average from "./Average";
+import React, { useCallback, useRef, useReducer } from "react";
 import TodoTemplate from "./TodoTemplate";
 import TodoInsert from "./TodoInsert";
 import TodoList from "./TodoList";
 
-const App = () => {
-    // const [visible, setVisible] = useState(false);
-    const nextId = useRef(4);
-    const [todos, setTodos] = useState([
-        {
-            id: 1,
-            text: "리액트의 기초 알아보기",
-            checked: true,
-        },
-        {
-            id: 2,
-            text: "컴포넌트 스타일링해 보기",
-            checked: true,
-        },
-        {
-            id: 3,
-            text: "일정 관리 앱 만들어 보기",
+function createBulkTodos() {
+    const arr = [];
+    for (let i = 1; i <= 2500; i++) {
+        arr.push({
+            id: i,
+            text: `할일:${i}`,
             checked: false,
-        },
-    ]);
+        });
+    }
+    return arr;
+}
+
+function todoReducer(todos, action) {
+    switch (action.type) {
+        case "INSERT":
+            return todos.concat(action.todo);
+        case "REMOVE":
+            return todos.filter((todo) => todo.id !== action.id);
+        case "TOGGLE":
+            return todos.map((todo) =>
+                todo.id === action.id
+                    ? { ...todo, checked: !todo.checked }
+                    : todo
+            );
+        default:
+            return todos;
+    }
+}
+
+const App = () => {
+    const [todos, dispatch] = useReducer(
+        todoReducer,
+        undefined,
+        createBulkTodos
+    );
+
+    const nextId = useRef(2501);
 
     const onInsert = useCallback(
         (text) => {
@@ -39,42 +48,24 @@ const App = () => {
                 text,
                 checked: false,
             };
-            setTodos(todos.concat(todo));
+            dispatch({ type: "INSERT", todo });
             nextId.current += 1;
         },
         [todos]
     );
 
-    const onRemove = useCallback(
-        (id) => {
-            setTodos(todos.filter((todo) => todo.id !== id));
-        },
-        [todos]
-    );
+    const onRemove = useCallback((id) => {
+        dispatch({ type: "REMOVE", id });
+    }, []);
 
     const onToggle = useCallback(
         (id) => {
-            setTodos(
-                todos.map((todo) =>
-                    todo.id === id ? { ...todo, checked: !todo.checked } : todo
-                )
-            );
+            dispatch({ type: "TOGGLE", id });
         },
         [todos]
     );
-
     return (
         <div>
-            {/* <button
-                onClick={() => {
-                    setVisible(!visible);
-                }}
-            >
-                {visible ? "숨기기" : "보이기"}
-            </button>
-            {visible && <Info></Info>} */}
-            {/* <CounterReducer></CounterReducer> */}
-            {/* <Average></Average> */}
             <TodoTemplate>
                 <TodoInsert onInsert={onInsert}></TodoInsert>
                 <TodoList
